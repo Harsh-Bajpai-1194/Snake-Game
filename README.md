@@ -1,2 +1,2 @@
 # Snake
-This a repo for LekhaJokha
+This a repo for Simple Snake Game.
