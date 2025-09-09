@@ -9,41 +9,59 @@
       padding: 0;
       height: 100%;
       overflow: hidden; 
-    }
-    body {
       display: flex;
       justify-content: center;
       align-items: center;
       background: #111;
       font-family: sans-serif;
       color: #0f0;
+      flex-direction: column;
     }
     canvas {
       background: #000;
       display: block;
-      border: 2px solid #0f0;
+      border: 20px solid brown;
+      margin-top: 20px;
     }
-    #score {
-      position: absolute;
-      top: 10px;
-      left: 10px;
+    #score, #level {
       font-size: 20px;
     }
+    #level { margin-left: 20px; }
+    #controls {
+      margin-bottom: 10px;
+    }
+    button, select {
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-right: 5px;
+    }
+    button { background: #0f0; color: #000; border: none; }
   </style>
 </head>
 <body>
-  <div id="score">Score: 0</div>
+  <div id="controls">
+    <select id="levelSelect">
+      <option value="1">Level 1</option>
+      <option value="2">Level 2</option>
+      <option value="3">Level 3</option>
+    </select>
+    <button id="startBtn">Start Game</button>
+    <span id="score">Score: 0</span>
+    <span id="level">Level: 1</span>
+  </div>
   <canvas id="game" width="400" height="400"></canvas>
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     const scoreEl = document.getElementById("score");
+    const levelEl = document.getElementById("level");
+    const startBtn = document.getElementById("startBtn");
+    const levelSelect = document.getElementById("levelSelect");
 
     const box = 20;
-    let snake = [{x: 9 * box, y: 10 * box}];
-    let direction = "RIGHT";
-    let nextDirection = "RIGHT";
-    let score = 0;
+    let snake, direction, nextDirection, food, score, level, speed, game;
 
     function spawnFood() {
       let newFood;
@@ -56,7 +74,25 @@
       return newFood;
     }
 
-    let food = spawnFood();
+    function initGame() {
+      level = parseInt(levelSelect.value);
+      if (level === 1) speed = 200;
+      else if (level === 2) speed = 150;
+      else speed = 100;
+
+      snake = [{x: 9 * box, y: 10 * box}];
+      direction = "RIGHT";
+      nextDirection = "RIGHT";
+      score = 0;
+      scoreEl.textContent = "Score: " + score;
+      levelEl.textContent = "Level: " + level;
+      food = spawnFood();
+      startBtn.disabled = true;
+      levelSelect.disabled = true;
+
+      clearInterval(game);
+      game = setInterval(draw, speed);
+    }
 
     document.addEventListener("keydown", event => {
       if (event.key === "ArrowLeft" && direction !== "RIGHT") nextDirection = "LEFT";
@@ -72,8 +108,18 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = i === 0 ? "#0f0" : "#0a0";
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
+        if (i === 0) {
+          ctx.fillStyle = "#0f0";
+          ctx.fillRect(snake[i].x, snake[i].y, box, box);
+          ctx.fillStyle = "#000";
+          if (direction === "RIGHT") { ctx.fillRect(snake[i].x + 12, snake[i].y + 4, 4, 4); ctx.fillRect(snake[i].x + 12, snake[i].y + 12, 4, 4); }
+          else if (direction === "LEFT") { ctx.fillRect(snake[i].x + 4, snake[i].y + 4, 4, 4); ctx.fillRect(snake[i].x + 4, snake[i].y + 12, 4, 4); }
+          else if (direction === "UP") { ctx.fillRect(snake[i].x + 4, snake[i].y + 4, 4, 4); ctx.fillRect(snake[i].x + 12, snake[i].y + 4, 4, 4); }
+          else { ctx.fillRect(snake[i].x + 4, snake[i].y + 12, 4, 4); ctx.fillRect(snake[i].x + 12, snake[i].y + 12, 4, 4); }
+        } else {
+          ctx.fillStyle = "#0a0";
+          ctx.fillRect(snake[i].x, snake[i].y, box, box);
+        }
       }
 
       ctx.fillStyle = "#f00";
@@ -91,25 +137,21 @@
         score++;
         scoreEl.textContent = "Score: " + score;
         food = spawnFood();
-      } else {
-        snake.pop();
-      }
+      } else snake.pop();
 
       const newHead = {x: snakeX, y: snakeY};
 
-      if (
-        snakeX < 0 || snakeY < 0 ||
-        snakeX >= canvas.width || snakeY >= canvas.height ||
-        snake.some(s => s.x === newHead.x && s.y === newHead.y)
-      ) {
+      if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || snake.some(s => s.x === newHead.x && s.y === newHead.y)) {
         clearInterval(game);
         alert("Game Over! Score: " + score);
+        startBtn.disabled = false;
+        levelSelect.disabled = false;
       }
 
       snake.unshift(newHead);
     }
 
-    const game = setInterval(draw, 100);
+    startBtn.addEventListener("click", initGame);
   </script>
 </body>
 </html>
