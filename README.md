@@ -1,7 +1,7 @@
 # 🐍 Snake Game
 
-Created on 9-9-25
-Author - HARSH BAJPAI
+Created on 9-9-25  
+Author - HARSH BAJPAI  
 A simple Snake Game built with **HTML, CSS, and JavaScript**.  
 It runs directly in the browser and can be hosted on **GitHub Pages**.
 
