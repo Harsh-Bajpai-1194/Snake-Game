@@ -38,6 +38,27 @@
       margin-right: 5px;
     }
     button { background: #0f0; color: #000; border: none; }
+    /* Mobile arrows */
+    #arrows {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: 60px 60px 60px;
+      grid-template-rows: 60px 60px;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    #up { grid-column: 2; grid-row: 1; }
+    #left { grid-column: 1; grid-row: 2; }
+    #down { grid-column: 2; grid-row: 2; }
+    #right { grid-column: 3; grid-row: 2; }
+    .arrow-btn {
+      font-size: 20px;
+      background: #0f0;
+      color: #000;
+      border: none;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
@@ -52,6 +73,15 @@
     <span id="level">Level: 1</span>
   </div>
   <canvas id="game" width="400" height="400"></canvas>
+
+  <!-- Mobile arrow buttons -->
+  <div id="arrows">
+    <button class="arrow-btn" id="up">⬆</button>
+    <button class="arrow-btn" id="left">⬅</button>
+    <button class="arrow-btn" id="down">⬇</button>
+    <button class="arrow-btn" id="right">➡</button>
+  </div>
+
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
@@ -94,12 +124,19 @@
       game = setInterval(draw, speed);
     }
 
+    // Keyboard controls
     document.addEventListener("keydown", event => {
       if (event.key === "ArrowLeft" && direction !== "RIGHT") nextDirection = "LEFT";
       if (event.key === "ArrowUp" && direction !== "DOWN") nextDirection = "UP";
       if (event.key === "ArrowRight" && direction !== "LEFT") nextDirection = "RIGHT";
       if (event.key === "ArrowDown" && direction !== "UP") nextDirection = "DOWN";
     });
+
+    // Mobile button controls
+    document.getElementById("up").addEventListener("click", () => { if (direction !== "DOWN") nextDirection = "UP"; });
+    document.getElementById("down").addEventListener("click", () => { if (direction !== "UP") nextDirection = "DOWN"; });
+    document.getElementById("left").addEventListener("click", () => { if (direction !== "RIGHT") nextDirection = "LEFT"; });
+    document.getElementById("right").addEventListener("click", () => { if (direction !== "LEFT") nextDirection = "RIGHT"; });
 
     function draw() {
       direction = nextDirection;
