@@ -92,6 +92,7 @@
 
     const box = 20;
     let snake, direction, nextDirection, food, score, level, speed, game;
+    let doorOpen = false;
 
     function spawnFood() {
       let newFood;
@@ -114,6 +115,7 @@
       direction = "RIGHT";
       nextDirection = "RIGHT";
       score = 0;
+      doorOpen = false;
       scoreEl.textContent = "Score: " + score;
       levelEl.textContent = "Level: " + level;
       food = spawnFood();
@@ -140,15 +142,15 @@
 
     function draw() {
       direction = nextDirection;
-
       ctx.fillStyle = "#000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      // Snake body
       for (let i = 0; i < snake.length; i++) {
         if (i === 0) {
           ctx.fillStyle = "#0f0";
           ctx.fillRect(snake[i].x, snake[i].y, box, box);
-          ctx.fillStyle = "#000";
+          ctx.fillStyle = "#000"; // eyes
           if (direction === "RIGHT") { ctx.fillRect(snake[i].x + 12, snake[i].y + 4, 4, 4); ctx.fillRect(snake[i].x + 12, snake[i].y + 12, 4, 4); }
           else if (direction === "LEFT") { ctx.fillRect(snake[i].x + 4, snake[i].y + 4, 4, 4); ctx.fillRect(snake[i].x + 4, snake[i].y + 12, 4, 4); }
           else if (direction === "UP") { ctx.fillRect(snake[i].x + 4, snake[i].y + 4, 4, 4); ctx.fillRect(snake[i].x + 12, snake[i].y + 4, 4, 4); }
@@ -159,8 +161,18 @@
         }
       }
 
+      // Food
       ctx.fillStyle = "#f00";
       ctx.fillRect(food.x, food.y, box, box);
+
+      // Open door at score >= 5
+      if (score >= 5) {
+        doorOpen = true;
+        ctx.fillStyle = "#222"; // Grey door
+        if (level === 1) ctx.fillRect(0, canvas.height / 2, box, box);
+        else if (level === 2) ctx.fillRect(canvas.width / 2, 0, box, box);
+        else if (level === 3) ctx.fillRect(canvas.width - box, canvas.height / 2, box, box);
+      }
 
       let snakeX = snake[0].x;
       let snakeY = snake[0].y;
@@ -170,6 +182,7 @@
       if (direction === "RIGHT") snakeX += box;
       if (direction === "DOWN") snakeY += box;
 
+      // Eat food
       if (snakeX === food.x && snakeY === food.y) {
         score++;
         scoreEl.textContent = "Score: " + score;
@@ -178,11 +191,45 @@
 
       const newHead = {x: snakeX, y: snakeY};
 
-      if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || snake.some(s => s.x === newHead.x && s.y === newHead.y)) {
+      // Wall collisions & door check
+      if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height) {
+        if (doorOpen) {
+          if (level === 1 && snakeX < 0 && snakeY === canvas.height / 2) {
+            clearInterval(game);
+            alert("🎉 Level 1 Cleared!");
+            startBtn.disabled = false;
+            levelSelect.disabled = false;
+            return;
+          }
+          if (level === 2 && snakeY < 0 && snakeX === canvas.width / 2) {
+            clearInterval(game);
+            alert("🎉 Level 2 Cleared!");
+            startBtn.disabled = false;
+            levelSelect.disabled = false;
+            return;
+          }
+          if (level === 3 && snakeX >= canvas.width && snakeY === canvas.height / 2) {
+            clearInterval(game);
+            alert("🎉 Level 3 Cleared!");
+            startBtn.disabled = false;
+            levelSelect.disabled = false;
+            return;
+          }
+        }
         clearInterval(game);
-        alert("Game Over! Score: " + score);
+        alert("💀 Game Over! Score: " + score);
         startBtn.disabled = false;
         levelSelect.disabled = false;
+        return;
+      }
+
+      // Self collision
+      if (snake.some(s => s.x === newHead.x && s.y === newHead.y)) {
+        clearInterval(game);
+        alert("💀 Game Over! Score: " + score);
+        startBtn.disabled = false;
+        levelSelect.disabled = false;
+        return;
       }
 
       snake.unshift(newHead);
