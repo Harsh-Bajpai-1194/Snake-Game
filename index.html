@@ -12,7 +12,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #111;
+      background: #000;
       font-family: sans-serif;
       color: #0f0;
       flex-direction: column;
@@ -91,6 +91,57 @@
     let snake, direction, nextDirection, food, score, level, speed, game;
     let doorOpen = false;
 
+    function isWall(x, y) {
+
+  if (doorOpen) {
+    if (level === 1 && x === 0 && y === canvas.height / 2) return false;
+    if (level === 2 && x === canvas.width / 2 && y === 0) return false;
+    if (level === 3 && x === canvas.width - box && y === canvas.height / 2) return false;
+  }
+
+  return (
+    x === 0 || y === 0 ||
+    x === canvas.width - box || y === canvas.height - box
+  );
+}
+
+
+    function drawWalls() {
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "brown";
+      for (let x = 0; x < canvas.width; x += box) {
+        for (let y = 0; y < canvas.height; y += box) {
+          if (isWall(x, y)) {
+            ctx.fillRect(x, y, box, box);
+          }
+        }
+      }
+    }
+    function drawWalls() {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "brown";
+  for (let x = 0; x < canvas.width; x += box) {
+    for (let y = 0; y < canvas.height; y += box) {
+      if (isWall(x, y)) {
+        ctx.fillRect(x, y, box, box);
+      }
+    }
+  }
+
+  if (doorOpen) {
+    ctx.fillStyle = "black";
+    if (level === 1) ctx.fillRect(0, canvas.height / 2, box, box);
+    else if (level === 2) ctx.fillRect(canvas.width / 2, 0, box, box);
+    else if (level === 3) ctx.fillRect(canvas.width - box, canvas.height / 2, box, box);
+  }
+}
+
+drawWalls();
+
     function spawnFood() {
       let newFood;
       do {
@@ -103,13 +154,6 @@
         isWall(newFood.x, newFood.y)
       );
       return newFood;
-    }
-
-    function isWall(x, y) {
-      return (
-        x === 0 || y === 0 ||
-        x === canvas.width - box || y === canvas.height - box
-      );
     }
 
     function initGame() {
@@ -144,24 +188,6 @@
     document.getElementById("down").addEventListener("click", () => { if (direction !== "UP") nextDirection = "DOWN"; });
     document.getElementById("left").addEventListener("click", () => { if (direction !== "RIGHT") nextDirection = "LEFT"; });
     document.getElementById("right").addEventListener("click", () => { if (direction !== "LEFT") nextDirection = "RIGHT"; });
-
-    function drawWalls() {
-      ctx.fillStyle = "brown";
-      for (let x = 0; x < canvas.width; x += box) {
-        for (let y = 0; y < canvas.height; y += box) {
-          if (isWall(x, y)) {
-            ctx.fillRect(x, y, box, box);
-          }
-        }
-      }
-
-      if (doorOpen) {
-        ctx.fillStyle = "blue";
-        if (level === 1) ctx.fillRect(0, canvas.height / 2, box, box);
-        else if (level === 2) ctx.fillRect(canvas.width / 2, 0, box, box);
-        else if (level === 3) ctx.fillRect(canvas.width - box, canvas.height / 2, box, box);
-      }
-    }
 
     function draw() {
       direction = nextDirection;
@@ -207,31 +233,8 @@
       const newHead = {x: snakeX, y: snakeY};
 
       if (isWall(snakeX, snakeY)) {
-        if (doorOpen) {
-          if (level === 1 && snakeX === 0 && snakeY === canvas.height / 2) {
-            clearInterval(game);
-            alert("🎉 Level 1 Cleared!");
-            startBtn.disabled = false;
-            levelSelect.disabled = false;
-            return;
-          }
-          if (level === 2 && snakeY === 0 && snakeX === canvas.width / 2) {
-            clearInterval(game);
-            alert("🎉 Level 2 Cleared!");
-            startBtn.disabled = false;
-            levelSelect.disabled = false;
-            return;
-          }
-          if (level === 3 && snakeX === canvas.width - box && snakeY === canvas.height / 2) {
-            clearInterval(game);
-            alert("🎉 Level 3 Cleared!");
-            startBtn.disabled = false;
-            levelSelect.disabled = false;
-            return;
-          }
-        }
         clearInterval(game);
-        alert("💀 Game Over! Score: " + score);
+        setTimeout(() => alert("💀 Game Over! Score: " + score), 1000);
         startBtn.disabled = false;
         levelSelect.disabled = false;
         return;
@@ -239,14 +242,32 @@
 
       if (snake.some(s => s.x === newHead.x && s.y === newHead.y)) {
         clearInterval(game);
-        alert("💀 Game Over! Score: " + score);
+        setTimeout(() => alert("💀 Game Over! Score: " + score), 1000);
         startBtn.disabled = false;
         levelSelect.disabled = false;
         return;
       }
+    
+if (doorOpen) {
+  if (
+    (level === 1 && snakeX === 0 && snakeY === canvas.height / 2) ||
+    (level === 2 && snakeX === canvas.width / 2 && snakeY === 0) ||
+    (level === 3 && snakeX === canvas.width - box && snakeY === canvas.height / 2)
+  ) {
+    clearInterval(game);
+    setTimeout(() => alert("🎉 Level " + level + " Cleared! Score: " + score), 1000);
+
+    startBtn.disabled = false;
+    levelSelect.disabled = false;
+    return;
+  }
+}
+
 
       snake.unshift(newHead);
     }
+
+    drawWalls();
 
     startBtn.addEventListener("click", initGame);
   </script>
