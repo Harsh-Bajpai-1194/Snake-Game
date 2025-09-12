@@ -4,7 +4,7 @@ import sys
 pygame.init()
 WIDTH, HEIGHT = 600, 400
 CELL = 20
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT)) 
 clock = pygame.time.Clock()
 snake = [(100, 100)]
 direction = (CELL, 0)
@@ -35,4 +35,5 @@ while True:
     if new_head == food: food = (random.randrange(0, WIDTH, CELL), random.randrange(0, HEIGHT, CELL))
     else: snake.pop()
     draw()
+
     clock.tick(10)
