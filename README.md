@@ -10,7 +10,7 @@ It runs directly in the browser and can be hosted on **GitHub Pages**.
 ## 🎮 How to Play
 - Use the **Arrow Keys** (⬅️ ⬆️ ➡️ ⬇️) to move the snake.
 - Eat the red square (🍎) to grow longer.
-- Avoid colliding with the walls or yourself.
+- Avoid colliding with the walls or yourself. 
 - The game ends when you crash!
 
 ---
