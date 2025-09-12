@@ -19,6 +19,7 @@
       background: linear-gradient(to right, #000, #000);
       color: #fff;
       overflow: hidden;
+      flex-direction: column;
     }
 
     #levelOverlay {
@@ -95,6 +96,38 @@
       border: 2px solid #000;
       background: #000;
     }
+
+    #controls {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .control-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      background: orange;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .btn:active {
+      background: gold;
+    }
   </style>
 </head>
 <body>
@@ -109,6 +142,17 @@
       <span id="level">Level: 1</span>
     </div>
     <canvas id="game" width="400" height="400"></canvas>
+
+    <div id="controls">
+      <div class="control-row">
+        <div class="btn" id="btnUp">⬆️</div>
+      </div>
+      <div class="control-row">
+        <div class="btn" id="btnLeft">⬅️</div>
+        <div class="btn" id="btnDown">⬇️</div>
+        <div class="btn" id="btnRight">➡️</div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -237,30 +281,36 @@
       if (event.key === "ArrowDown" && direction !== "UP") nextDirection = "DOWN";
     });
 
-    
+    document.getElementById("btnUp").addEventListener("click", () => {
+      if (direction !== "DOWN") nextDirection = "UP";
+    });
+    document.getElementById("btnDown").addEventListener("click", () => {
+      if (direction !== "UP") nextDirection = "DOWN";
+    });
+    document.getElementById("btnLeft").addEventListener("click", () => {
+      if (direction !== "RIGHT") nextDirection = "LEFT";
+    });
+    document.getElementById("btnRight").addEventListener("click", () => {
+      if (direction !== "LEFT") nextDirection = "RIGHT";
+    });
+
     function draw() {
       direction = nextDirection;
 
-      
       ctx.fillStyle = "#000";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      
       drawWalls();
 
-      
       for (let i = 0; i < snake.length; i++) {
         if (i === 0) {
-          
           ctx.fillStyle = "#0f0";
           ctx.fillRect(snake[i].x, snake[i].y, box, box);
 
-          
           ctx.fillStyle = "#000";
           ctx.fillRect(snake[i].x + 4, snake[i].y + 4, 4, 4);
           ctx.fillRect(snake[i].x + 12, snake[i].y + 4, 4, 4);
         } else {
-          
           ctx.fillStyle = "#0a0";
           ctx.fillRect(snake[i].x, snake[i].y, box, box);
         }
@@ -331,5 +381,3 @@
   </script>
 </body>
 </html>
-
-
