@@ -158,8 +158,10 @@ function draw() {
     }
     }
 
-    ctx.fillStyle = "#f00";
-    ctx.fillRect(food.x, food.y, box, box);
+    ctx.font = box + "px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("🍎", food.x + box / 2, food.y + box / 2);
 
     if (score >= 5) doorOpen = true;
 
