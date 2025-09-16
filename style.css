@@ -1,1 +1,124 @@
- 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, #000, #000);
+    color: #fff;
+    overflow: hidden;
+    flex-direction: column;
+}
+
+#levelOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 10;
+}
+
+#levelOverlay h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: gold;
+}
+
+.level-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 80px);
+    gap: 20px;
+}
+
+.level {
+    width: 80px;
+    height: 80px;
+    background: orange;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .3s;
+    position: relative;
+}
+
+.level:hover {
+    transform: scale(1.1);
+}
+
+.level.locked {
+    background: gray;
+    cursor: not-allowed;
+}
+
+.stars {
+    position: absolute;
+    top: -20px;
+    font-size: 14px;
+    color: gold;
+}
+
+#gameUI {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+}
+
+#topbar {
+    margin-bottom: 10px;
+    font-size: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+canvas {
+    border: 2px solid #000;
+    background: #000;
+}
+
+#controls {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-row {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    background: orange;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    user-select: none;
+}
+
+.btn:active {
+    background: gold;
+}
