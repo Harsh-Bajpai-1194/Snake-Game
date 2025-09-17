@@ -4,7 +4,6 @@
     box-sizing: border-box;
     font-family: Arial, sans-serif;
 }
-
 body {
     height: 100vh;
     display: flex;
@@ -15,7 +14,6 @@ body {
     overflow: hidden;
     flex-direction: column;
 }
-
 #introImage {
     position: fixed;
     top: 10;
@@ -25,7 +23,6 @@ body {
     object-fit: cover;
     z-index: 1000;
 }
-
 #introImage1 {
     position: fixed;
     top: 0;
@@ -35,7 +32,6 @@ body {
     object-fit: cover;
     z-index: 1000;
 }
-
 #levelOverlay {
     position: absolute;
     top: 0;
@@ -49,19 +45,16 @@ body {
     flex-direction: column;
     z-index: 10;
 }
-
 #levelOverlay h1 {
     font-size: 2rem;
     margin-bottom: 20px;
     color: gold;
 }
-
 .level-grid {
     display: grid;
     grid-template-columns: repeat(5, 80px);
     gap: 20px;
 }
-
 .level {
     width: 80px;
     height: 80px;
@@ -76,41 +69,34 @@ body {
     transition: .3s;
     position: relative;
 }
-
 .level:hover {
     transform: scale(1.1);
 }
-
 .level.locked {
     background: gray;
     cursor: not-allowed;
 }
-
 .stars {
     position: absolute;
     top: -20px;
     font-size: 14px;
     color: gold;
 }
-
 #gameUI {
     display: none;
     flex-direction: column;
     align-items: center;
 }
-
 #topbar {
     margin-bottom: 10px;
     font-size: 20px;
     display: flex;
     gap: 20px;
 }
-
 canvas {
     border: 2px solid #000;
     background: #000;
 }
-
 #controls {
     margin-top: 15px;
     display: flex;
@@ -118,12 +104,10 @@ canvas {
     align-items: center;
     gap: 10px;
 }
-
 .control-row {
     display: flex;
     gap: 10px;
 }
-
 .btn {
     width: 60px;
     height: 60px;
@@ -138,7 +122,6 @@ canvas {
     cursor: pointer;
     user-select: none;
 }
-
 .btn:active {
     background: gold;
 }
