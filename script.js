@@ -6,33 +6,26 @@ const levelGrid = document.getElementById("levelGrid");
 const overlay = document.getElementById("levelOverlay");
 const gameUI = document.getElementById("gameUI");
 const box = 20;
-
 let snake, direction, nextDirection, food, score, level, speed, game;
 let doorOpen = false;
-
 const totalLevels = 5;
 let unlocked = 5;
-
 for (let i = 1; i <= totalLevels; i++) {
     const div = document.createElement("div");
     div.classList.add("level");
     if (i > unlocked) div.classList.add("locked");
     div.innerText = i;
-
     const stars = document.createElement("div");
     stars.classList.add("stars");
     stars.innerText = "★★★";
     div.appendChild(stars);
-
     div.addEventListener("click", () => {
         if (!div.classList.contains("locked")) {
             startGame(i);
         }
     });
-
     levelGrid.appendChild(div);
 }
-
 function isWall(x, y) {
     if (doorOpen) {
         if (level === 1 && x === 0 && y === canvas.height / 2) return false;
@@ -48,7 +41,6 @@ function isWall(x, y) {
         y === canvas.height - box
     );
 }
-
 function drawWalls() {
     ctx.fillStyle = "brown";
     for (let x = 0; x < canvas.width; x += box) {
@@ -67,7 +59,6 @@ function drawWalls() {
         else if (level === 5) ctx.fillRect(canvas.width / 2, canvas.height / 2, box, box);
     }
 }
-
 function spawnFood() {
     let newFood;
     do {
@@ -81,7 +72,6 @@ function spawnFood() {
     );
     return newFood;
 }
-
 function startGame(lvl) {
     overlay.style.display = "none";
     gameUI.style.display = "flex";
@@ -98,14 +88,12 @@ function startGame(lvl) {
     clearInterval(game);
     game = setInterval(draw, speed);
 }
-
 document.addEventListener("keydown", event => {
     if (event.key === "ArrowLeft" && direction !== "RIGHT") nextDirection = "LEFT";
     if (event.key === "ArrowUp" && direction !== "DOWN") nextDirection = "UP";
     if (event.key === "ArrowRight" && direction !== "LEFT") nextDirection = "RIGHT";
     if (event.key === "ArrowDown" && direction !== "UP") nextDirection = "DOWN";
 });
-
 document.getElementById("btnUp").addEventListener("click", () => {
     if (direction !== "DOWN") nextDirection = "UP";
 });
@@ -118,7 +106,6 @@ document.getElementById("btnLeft").addEventListener("click", () => {
 document.getElementById("btnRight").addEventListener("click", () => {
     if (direction !== "LEFT") nextDirection = "RIGHT";
 });
-
 function draw() {
     direction = nextDirection;
     ctx.fillStyle = "#000";
@@ -186,23 +173,15 @@ function draw() {
     }
     snake.unshift(newHead);
 }
-
 const introImage = document.getElementById("introImage");
 const introImage1 = document.getElementById("introImage1");
-
-// Set initial states
-introImage.style.display = "block";    // show first image
-introImage1.style.display = "none";    // hide second image
-
-// Show first image for 2 seconds
+introImage.style.display = "block";
+introImage1.style.display = "none";
 setTimeout(() => {
-    introImage.style.display = "none";       // hide first image
-    introImage1.style.display = "block";     // show second image
-
-    // Show second image for 2 seconds
+    introImage.style.display = "none";
+    introImage1.style.display = "block";
     setTimeout(() => {
-        introImage1.style.display = "none";  // hide second image
-        overlay.style.display = "flex";      // show level select
+        introImage1.style.display = "none";
+        overlay.style.display = "flex";
     }, 2000);
-
 }, 2000);
