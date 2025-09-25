@@ -14,6 +14,28 @@ body {
     overflow: hidden;
     flex-direction: column;
 }
+#gameOverScreen {
+  display: none;
+  position: absolute;
+  top: 0; 
+  left: 20%;
+  width: 100%; 
+  height: 100%;
+  background: black;
+  color: red;
+  font-size: 80px;
+  font-family: 'Press Start 2P', monospace;
+  text-align: center;
+  line-height: 100vh;
+  z-index: 9999;
+}
+
+@keyframes flicker {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
 #introImage {
     position: fixed;
     top: 10;
@@ -95,8 +117,9 @@ body {
 }
 canvas {
     border: 2px solid #000;
-    background: #000;
+    background: radial-gradient(circle at center, #222 20%, #440000 100%);
 }
+
 #controls {
     margin-top: 15px;
     display: flex;

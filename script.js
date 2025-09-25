@@ -108,32 +108,47 @@ document.getElementById("btnRight").addEventListener("click", () => {
 });
 function draw() {
     direction = nextDirection;
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawWalls();
+// 1. Fill entire canvas (outside area color)
+ctx.fillStyle = "lightblue";  // changed from "#222" to light blue
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+// 2. Fill inner play area (inside walls)
+ctx.fillStyle = "#000";
+ctx.fillRect(box, box, canvas.width - 2 * box, canvas.height - 2 * box);
+// 3. Draw walls
+drawWalls();
+
+    // Draw snake
     for (let i = 0; i < snake.length; i++) {
         if (i === 0) {
-            ctx.fillStyle = "#0f0";
+            ctx.fillStyle = "#0f0"; // head
             ctx.fillRect(snake[i].x, snake[i].y, box, box);
-            ctx.fillStyle = "#000";
+            ctx.fillStyle = "#000"; // eyes
             ctx.fillRect(snake[i].x + 4, snake[i].y + 4, 4, 4);
             ctx.fillRect(snake[i].x + 12, snake[i].y + 4, 4, 4);
         } else {
-            ctx.fillStyle = "#0a0";
+            ctx.fillStyle = "#0a0"; // body
             ctx.fillRect(snake[i].x, snake[i].y, box, box);
         }
     }
+
+    // Draw food
     ctx.font = box + "px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText("🍎", food.x + box / 2, food.y + box / 2);
+
     if (score >= 5) doorOpen = true;
+
+    // Move snake
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
     if (direction === "LEFT") snakeX -= box;
     if (direction === "UP") snakeY -= box;
     if (direction === "RIGHT") snakeX += box;
     if (direction === "DOWN") snakeY += box;
+
+    // Check if ate food
     if (snakeX === food.x && snakeY === food.y) {
         score++;
         scoreEl.textContent = "Score: " + score;
@@ -141,36 +156,77 @@ function draw() {
     } else {
         snake.pop();
     }
+
     const newHead = { x: snakeX, y: snakeY };
+
+    // --- Game Over condition ---
     if (
         isWall(snakeX, snakeY) ||
         snake.some(s => s.x === newHead.x && s.y === newHead.y)
     ) {
         clearInterval(game);
-        setTimeout(() => alert("💀 Game Over! Score: " + score), 1000);
+
+        // Show Game Over Screen
+        const gameOverScreen = document.getElementById("gameOverScreen");
+        gameOverScreen.style.display = "flex";
+        gameOverScreen.textContent = "       GAME OVER\nScore: " + score;
+
+        // After 3 seconds, return to menu
         setTimeout(() => {
+            gameOverScreen.style.display = "none";
             overlay.style.display = "flex";
             gameUI.style.display = "none";
-        }, 5000);
-        return;
+        }, 3000);
+
+        return; // stop here
     }
-    if (doorOpen) {
-        if (
-            (level === 1 && snakeX === 0 && snakeY === canvas.height / 2) ||
-            (level === 2 && snakeX === canvas.width / 2 && snakeY === 0) ||
-            (level === 3 && snakeX === canvas.width - box && snakeY === canvas.height / 2) ||
-            (level === 4 && snakeX === canvas.width / 2 && snakeY === canvas.height - box) ||
-            (level === 5 && snakeX === canvas.width / 2 && snakeY === canvas.height / 2)
-        ) {
-            clearInterval(game);
-            setTimeout(() => alert("🎉 Level " + level + " Cleared!"), 1000);
-            setTimeout(() => {
-                overlay.style.display = "flex";
-                gameUI.style.display = "none";
-            }, 2000);
-            return;
-        }
+
+    // --- Level Cleared condition (check before collision) ---
+if (doorOpen) {
+    if (
+        (level === 1 && snakeX === 0 && snakeY === canvas.height / 2) ||
+        (level === 2 && snakeX === canvas.width / 2 && snakeY === 0) ||
+        (level === 3 && snakeX === canvas.width - box && snakeY === canvas.height / 2) ||
+        (level === 4 && snakeX === canvas.width / 2 && snakeY === canvas.height - box) ||
+        (level === 5 && snakeX === canvas.width / 2 && snakeY === canvas.height / 2)
+    ) {
+        clearInterval(game);
+
+        // Show "Level Cleared"
+        const gameOverScreen = document.getElementById("gameOverScreen");
+        gameOverScreen.style.display = "flex";
+        gameOverScreen.textContent = "🎉 Level " + level + " Cleared!";
+
+        // Return to menu after 2 sec
+        setTimeout(() => {
+            gameOverScreen.style.display = "none";
+            overlay.style.display = "flex";
+            gameUI.style.display = "none";
+        }, 2000);
+
+        return; // ✅ important, stop draw()
     }
+}
+
+// --- Game Over condition ---
+if (
+    isWall(snakeX, snakeY) ||
+    snake.some(s => s.x === snakeX && s.y === snakeY)
+) {
+    clearInterval(game);
+
+    const gameOverScreen = document.getElementById("gameOverScreen");
+    gameOverScreen.style.display = "flex";
+    gameOverScreen.textContent = "GAME OVER\nScore: " + score;
+
+    setTimeout(() => {
+        gameOverScreen.style.display = "none";
+        overlay.style.display = "flex";
+        gameUI.style.display = "none";
+    }, 3000);
+
+    return;
+}
     snake.unshift(newHead);
 }
 const introImage = document.getElementById("introImage");
