@@ -12,10 +12,6 @@ let doorOpen = false;
 const totalLevels = 5;
 let unlocked = 5;
 
-// ⚡ Gate blinking variables
-let gateBlinkColor = "black";
-let blinkInterval = null;
-
 // --- Create Level Buttons ---
 for (let i = 1; i <= totalLevels; i++) {
     const div = document.createElement("div");
@@ -60,14 +56,14 @@ function drawWalls() {
         }
     }
 
-    // ⚡ Draw blinking gate
+    // Draw the open gate (dark color section)
     if (doorOpen) {
-        ctx.fillStyle = gateBlinkColor;
+        ctx.fillStyle = "black";
         if (level === 1) ctx.fillRect(0, canvas.height / 2, box, box);
         else if (level === 2) ctx.fillRect(canvas.width / 2, 0, box, box);
         else if (level === 3) ctx.fillRect(canvas.width - box, canvas.height / 2, box, box);
         else if (level === 4) ctx.fillRect(canvas.width / 2, canvas.height - box, box, box);
-        else if (level === 5) ctx.fillRect(canvas.width / 2, 0, box, box);
+        else if (level === 5) ctx.fillRect(canvas.width / 2, 0, box, box); // gate at top center
     }
 }
 
@@ -100,11 +96,6 @@ function startGame(lvl) {
     scoreEl.textContent = "Score: " + score;
     levelEl.textContent = "Level: " + level;
     food = spawnFood();
-
-    // ⚡ Stop blinking when game starts
-    clearInterval(blinkInterval);
-    gateBlinkColor = "black";
-
     clearInterval(game);
     game = setInterval(draw, speed);
 }
@@ -162,13 +153,8 @@ function draw() {
     ctx.textBaseline = "middle";
     ctx.fillText("🍎", food.x + box / 2, food.y + box / 2);
 
-    // ⚡ Open gate after score ≥ 5 (and start blinking)
-    if (score >= 5 && !doorOpen) {
-        doorOpen = true;
-        blinkInterval = setInterval(() => {
-            gateBlinkColor = gateBlinkColor === "black" ? "yellow" : "black";
-        }, 400);
-    }
+    // Open gate after score ≥ 5
+    if (score >= 5) doorOpen = true;
 
     // Move snake
     let snakeX = snake[0].x;
@@ -199,7 +185,6 @@ function draw() {
             (level === 5 && snakeX === canvas.width / 2 && snakeY === 0)
         ) {
             clearInterval(game);
-            clearInterval(blinkInterval); // ⚡ stop blinking
             const gameOverScreen = document.getElementById("gameOverScreen");
             gameOverScreen.style.display = "flex";
             gameOverScreen.textContent = "🎉 Level " + level + " Cleared!";
@@ -218,7 +203,6 @@ function draw() {
         snake.some(s => s.x === newHead.x && s.y === newHead.y)
     ) {
         clearInterval(game);
-        clearInterval(blinkInterval); // ⚡ stop blinking
         const gameOverScreen = document.getElementById("gameOverScreen");
         gameOverScreen.style.display = "flex";
         gameOverScreen.textContent = "GAME OVER\nScore: " + score;
