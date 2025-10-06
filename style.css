@@ -1,150 +1,153 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
+
 body {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(to right, #000, #000);
-    color: #fff;
-    overflow: hidden;
-    flex-direction: column;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #000, #000);
+  color: #fff;
+  overflow: hidden;
+  flex-direction: column;
 }
+
+/* Game over / level cleared overlay */
 #gameOverScreen {
   display: none;
-  position: absolute;
-  top: 0; 
-  left: 20%;
-  width: 100%; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
   background: black;
   color: red;
-  font-size: 80px;
+  font-size: 60px;
   font-family: 'Press Start 2P', monospace;
   text-align: center;
   line-height: 100vh;
   z-index: 9999;
+  animation: flicker 1s infinite;
 }
 
 @keyframes flicker {
-  0%   { opacity: 1; }
-  50%  { opacity: 0.6; }
-  100% { opacity: 1; }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
-#introImage {
-    position: fixed;
-    top: 10;
-    left: 10;
-    width: 50%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 1000;
-}
+/* Intro images */
+#introImage,
 #introImage1 {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1000;
 }
+
+/* Level overlay */
 #levelOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 10;
 }
 #levelOverlay h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: gold;
-}
-.level-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 80px);
-    gap: 20px;
-}
-.level {
-    width: 80px;
-    height: 80px;
-    background: orange;
-    border-radius: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 22px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: .3s;
-    position: relative;
-}
-.level:hover {
-    transform: scale(1.1);
-}
-.level.locked {
-    background: gray;
-    cursor: not-allowed;
-}
-.stars {
-    position: absolute;
-    top: -20px;
-    font-size: 14px;
-    color: gold;
-}
-#gameUI {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-}
-#topbar {
-    margin-bottom: 10px;
-    font-size: 20px;
-    display: flex;
-    gap: 20px;
-}
-canvas {
-    border: 2px solid #000;
-    background: radial-gradient(circle at center, #222 20%, #440000 100%);
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: gold;
 }
 
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 80px);
+  gap: 20px;
+}
+
+.level {
+  width: 80px;
+  height: 80px;
+  background: orange;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+}
+.level:hover { transform: scale(1.1); }
+.level.locked { background: gray; cursor: not-allowed; }
+
+.stars {
+  position: absolute;
+  top: -20px;
+  font-size: 14px;
+  color: gold;
+}
+
+/* Game UI */
+#gameUI {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+}
+#topbar {
+  margin-bottom: 10px;
+  font-size: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+/* Canvas styling */
+canvas {
+  border: 2px solid #000;
+  background: radial-gradient(circle at center, #111 20%, #330000 100%);
+}
+
+/* Controls */
 #controls {
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 .control-row {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 .btn {
-    width: 60px;
-    height: 60px;
-    border-radius: 10px;
-    background: orange;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #000;
-    cursor: pointer;
-    user-select: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  background: orange;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+  user-select: none;
+  transition: 0.3s;
 }
 .btn:active {
-    background: gold;
+  background: gold;
+  transform: scale(0.95);
 }

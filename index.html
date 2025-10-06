@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="author" content="Harsh Bajpai">
-  <meta name="description" content="A simple snake game with level select feature.">
-  <meta name="keywords" content="snake game, javascript game, html5 game, css game, level select">
-  <meta name="robots" content="index, follow">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta name="author" content="Harsh Bajpai" />
+  <meta name="description" content="A simple snake game with level select feature." />
+  <meta name="keywords" content="snake game, javascript game, html5 game, css game, level select" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <title>Snake Game</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <img id="introImage" src="image.jpg" alt="Intro Image">
-  <img id="introImage1" src="image1.jpg" alt="Intro Image 1" style="display:none">
-  
+  <!-- Intro images -->
+  <img id="introImage" src="image.jpg" alt="Intro Image" />
+  <img id="introImage1" src="image1.jpg" alt="Intro Image 1" style="display:none" />
+
+  <!-- Level Selection Overlay -->
   <div id="levelOverlay">
     <h1>LEVEL SELECT</h1>
     <div class="level-grid" id="levelGrid"></div>
   </div>
-  
+
+  <!-- Game UI -->
   <div id="gameUI">
     <div id="topbar">
       <span id="score">Score: 0</span>
       <span id="level">Level: 1</span>
     </div>
     <canvas id="game" width="400" height="400"></canvas>
+
+    <!-- Controls -->
     <div id="controls">
       <div class="control-row">
         <div class="btn" id="btnUp">⬆️</div>
@@ -39,9 +45,9 @@
     </div>
   </div>
 
-  <!-- Game Over Screen -->
-  <div id="gameOverScreen"></t>GAME OVER</div>
+  <!-- Game Over / Level Cleared Screen -->
+  <div id="gameOverScreen"></div>
 
   <script src="script.js"></script>
 </body>
-</html> 
+</html>
