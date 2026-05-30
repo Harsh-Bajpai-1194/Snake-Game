@@ -1,4 +1,4 @@
-# 🐍 Snake Game
+# 🐍 Snake Game  ![Version](https://img.shields.io/badge/Release-v1.2.5-deeppink?style=for-the-the-badge&logo=github)  
 
 Created on 9-9-25  
 Author - HARSH BAJPAI  
