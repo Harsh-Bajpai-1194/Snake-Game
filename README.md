@@ -10,6 +10,7 @@ It runs directly in the browser and can be hosted on **GitHub Pages**.
 ## 🎮 How to Play
 - Use the **Arrow Keys** (⬅️ ⬆️ ➡️ ⬇️) to move the snake.
 - Eat the red square (🍎) to grow longer.
+- When the yellow gate appears, go through it to clear the level.
 - Avoid colliding with the walls or yourself. 
 - The game ends when you crash!
 
