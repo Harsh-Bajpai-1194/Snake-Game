@@ -236,6 +236,9 @@ function draw() {
 // --- INTRO SEQUENCE ---
 const introImage = document.getElementById("introImage");
 introImage.style.display = "block";
+const introImage1 = document.getElementById("introImage1");
+if (introImage1) introImage1.style.display = "none";
 setTimeout(() => {
     introImage.style.display = "none";
+    overlay.style.display = "flex";
 }, 2000);
