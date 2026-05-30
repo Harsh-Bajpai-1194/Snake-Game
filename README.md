@@ -14,7 +14,9 @@ It runs directly in the browser and can be hosted on **GitHub Pages**.
 - The game ends when you crash!
 
 ---
-
+## Hosted on GitHub Pages, Try it now 👇
+https://harsh-bajpai-1194.github.io/Snake-Game/
+---
 ## 🚀 Run Locally
 1. Clone the repository:
    ```bash
