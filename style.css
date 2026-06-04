@@ -77,8 +77,16 @@ body {
 
 .level-grid {
   display: grid;
-  grid-template-columns: repeat(5, 80px);
+  grid-template-columns: repeat(6, 80px);
   gap: 20px;
+}
+
+#levelOverlay p {
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: #ccc;
+  max-width: 420px;
+  text-align: center;
 }
 
 .level {
@@ -94,15 +102,19 @@ body {
   cursor: pointer;
   transition: 0.3s;
   position: relative;
+  z-index: 2;
+  overflow: visible;
 }
 .level:hover { transform: scale(1.1); }
 .level.locked { background: gray; cursor: not-allowed; }
 
 .stars {
   position: absolute;
-  top: -20px;
+  top: -12px;
   font-size: 14px;
   color: gold;
+  pointer-events: none; /* allow clicks to pass through to the level tile */
+  text-shadow: 0 0 6px rgba(255,215,0,0.6);
 }
 
 /* Game UI */

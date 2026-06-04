@@ -9,8 +9,8 @@ const box = 20;
 
 let snake, direction, nextDirection, food, score, level, speed, game;
 let doorOpen = false;
-const totalLevels = 5;
-let unlocked = 5;
+const totalLevels = 6;
+let unlocked = 6;
 
 // ⚡ Gate blinking variables
 let gateBlinkColor = "black";
@@ -43,6 +43,7 @@ function isWall(x, y) {
         if (level === 3 && x === canvas.width - box && y === canvas.height / 2) return false;
         if (level === 4 && x === canvas.width / 2 && y === canvas.height - box) return false;
         if (level === 5 && x === canvas.width / 2 && y === 0) return false; // top center gate
+        if (level === 6 && x === canvas.width - box && y === canvas.height - box) return false; // bottom-right corner gate
     }
     return (
         x === 0 ||
@@ -68,6 +69,7 @@ function drawWalls() {
         else if (level === 3) ctx.fillRect(canvas.width - box, canvas.height / 2, box, box);
         else if (level === 4) ctx.fillRect(canvas.width / 2, canvas.height - box, box, box);
         else if (level === 5) ctx.fillRect(canvas.width / 2, 0, box, box);
+        else if (level === 6) ctx.fillRect(canvas.width - box, canvas.height - box, box, box);
     }
 }
 
@@ -196,7 +198,8 @@ function draw() {
             (level === 2 && snakeX === canvas.width / 2 && snakeY === 0) ||
             (level === 3 && snakeX === canvas.width - box && snakeY === canvas.height / 2) ||
             (level === 4 && snakeX === canvas.width / 2 && snakeY === canvas.height - box) ||
-            (level === 5 && snakeX === canvas.width / 2 && snakeY === 0)
+            (level === 5 && snakeX === canvas.width / 2 && snakeY === 0) ||
+            (level === 6 && snakeX === canvas.width - box && snakeY === canvas.height - box)
         ) {
             clearInterval(game);
             clearInterval(blinkInterval); // ⚡ stop blinking
