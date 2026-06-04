@@ -10,7 +10,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #000;
+  background: linear-gradient(to right, #000, #000);
   color: #fff;
   overflow: hidden;
   flex-direction: column;
@@ -24,17 +24,12 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.96);
+  background: black;
   color: red;
-  font-size: 2rem;
-  font-family: 'Press Start 2P', monospace, sans-serif;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  white-space: pre-wrap;
+  font-size: 60px;
+  font-family: 'Press Start 2P', monospace;
   text-align: center;
-  padding: 20px;
+  line-height: 100vh;
   z-index: 9999;
   animation: flicker 1s infinite;
 }
@@ -44,6 +39,7 @@ body {
   50% { opacity: 0.6; }
 }
 
+/* Intro images */
 /* Intro images */
 #introImage {
   position: fixed;
@@ -77,16 +73,8 @@ body {
 
 .level-grid {
   display: grid;
-  grid-template-columns: repeat(6, 80px);
+  grid-template-columns: repeat(5, 80px);
   gap: 20px;
-}
-
-#levelOverlay p {
-  margin-bottom: 20px;
-  font-size: 1rem;
-  color: #ccc;
-  max-width: 420px;
-  text-align: center;
 }
 
 .level {
@@ -102,19 +90,15 @@ body {
   cursor: pointer;
   transition: 0.3s;
   position: relative;
-  z-index: 2;
-  overflow: visible;
 }
 .level:hover { transform: scale(1.1); }
 .level.locked { background: gray; cursor: not-allowed; }
 
 .stars {
   position: absolute;
-  top: -12px;
+  top: -20px;
   font-size: 14px;
   color: gold;
-  pointer-events: none; /* allow clicks to pass through to the level tile */
-  text-shadow: 0 0 6px rgba(255,215,0,0.6);
 }
 
 /* Game UI */
