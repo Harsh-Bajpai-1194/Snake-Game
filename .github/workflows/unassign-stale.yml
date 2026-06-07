@@ -44,12 +44,13 @@ jobs:
               const assignedEvents = events.filter(e => e.event === 'assigned');
               if (assignedEvents.length === 0) continue;
               
-              const lastAssigned = new Date(assignedEvents[assignedEvents.length - 1].created_at);
+              const lastAssignedEvent = assignedEvents[assignedEvents.length - 1];
+              const lastAssigned = new Date(lastAssignedEvent.created_at);
               const hoursSinceAssigned = (now - lastAssigned) / (1000 * 60 * 60);
               
-              // 4. Check if the user linked a Pull Request to this issue
+              // 4. Check if the user linked a Pull Request AFTER they were assigned
               // GitHub automatically creates a 'cross-referenced' event when a PR mentions an issue
-              const hasPRLinked = events.some(e => e.event === 'cross-referenced' || e.event === 'connected');
+              const hasPRLinked = events.some(e => (e.event === 'cross-referenced' || e.event === 'connected') && new Date(e.created_at) > lastAssigned);
               
               // 5. If 24 hours have passed AND no PR is linked, remove them!
               if (hoursSinceAssigned >= STALE_HOURS && !hasPRLinked) {
