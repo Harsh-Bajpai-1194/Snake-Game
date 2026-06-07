@@ -8,6 +8,12 @@ Whether you are fixing a bug, improving the UI, or adding a new feature like a h
 
 We follow the standard "Fork and Pull" workflow. If you are new to open-source, here is how you can submit your first Pull Request (PR):
 
+### 🎯 Claiming an Issue
+- Find an unassigned issue you want to work on.
+- Comment exactly `/claim` on the issue to assign it to yourself automatically.
+- **Time Limit:** You have **24 hours** to submit a Pull Request. If you don't link a PR within 24 hours, the issue will be automatically unassigned so others get a chance!
+- **Link your PR:** When you submit your Pull Request, make sure to include `Fixes #ISSUE_NUMBER` in your PR description so the bot knows you completed the task on time.
+
 1. **Fork the repository:** Click the "Fork" button in the top-right corner of GitHub.
 2. **Clone your fork:**
    ```bash

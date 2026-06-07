@@ -9,6 +9,9 @@ on:
 
 jobs:
   unassign-stale:
+    permissions:
+      issues: write
+
     runs-on: ubuntu-latest
     steps:
       - name: Check and unassign stale issues

@@ -6,6 +6,9 @@ on:
 
 jobs:
   assign:
+    permissions:
+      issues: write
+
     runs-on: ubuntu-latest
     # Only run if the comment exactly matches "/claim" and the issue is currently unassigned
     if: github.event.issue.assignee == null && contains(github.event.comment.body, '/claim')
