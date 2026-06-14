@@ -12,8 +12,8 @@ const box = 20;
 
 let snake, direction, nextDirection, food, score, level, speed, game;
 let doorOpen = false;
-const totalLevels = 6;
-let unlocked = 6;
+const totalLevels = 7;
+let unlocked = 7;
 
 // ⚡ Gate blinking variables
 let gateBlinkColor = "black";
@@ -30,6 +30,72 @@ const snakeColors = [
 ];
 
 let selectedColor = snakeColors[0]; // Default color configuration
+
+const level7Reference = { width: 577, height: 536 };
+const level7CornerWalls = [
+    sourceRect(44, 18, 82, 74, "top-left"),
+    sourceRect(465, 18, 83, 78, "top-right"),
+    sourceRect(44, 442, 86, 79, "bottom-left"),
+    sourceRect(459, 436, 86, 85, "bottom-right")
+];
+
+const level7WallRects = [
+    ...level7CornerWalls,
+    sourceRect(126, 19, 339, 25),
+    sourceRect(44, 92, 25, 350),
+    sourceRect(519, 96, 25, 340),
+    sourceRect(130, 494, 329, 25)
+];
+
+const level7CornerDetailRects = [
+    sourceRect(76, 44, 15, 1),
+    sourceRect(94, 44, 27, 1),
+    sourceRect(69, 48, 1, 20),
+    sourceRect(69, 71, 1, 16),
+    sourceRect(470, 44, 21, 1),
+    sourceRect(494, 44, 22, 1),
+    sourceRect(518, 47, 1, 20),
+    sourceRect(518, 70, 1, 21),
+    sourceRect(69, 447, 1, 21),
+    sourceRect(69, 471, 1, 20),
+    sourceRect(77, 493, 18, 1),
+    sourceRect(98, 493, 26, 1),
+    sourceRect(466, 493, 25, 1),
+    sourceRect(494, 493, 21, 1),
+    sourceRect(518, 443, 1, 21),
+    sourceRect(518, 467, 1, 24)
+];
+
+function sourceRect(x, y, width, height, type) {
+    const scaleX = canvas.width / level7Reference.width;
+    const scaleY = canvas.height / level7Reference.height;
+
+    return {
+        x: x * scaleX,
+        y: y * scaleY,
+        width: width * scaleX,
+        height: height * scaleY,
+        type
+    };
+}
+
+function getGatePosition(lvl) {
+    const gates = {
+        1: { x: 0, y: canvas.height / 2 },
+        2: { x: canvas.width / 2, y: 0 },
+        3: { x: canvas.width - box, y: canvas.height / 2 },
+        4: { x: canvas.width / 2, y: canvas.height - box },
+        5: { x: canvas.width / 2, y: 0 },
+        6: { x: canvas.width - box, y: canvas.height / 2 + 4 * box },
+        7: { x: canvas.width - box, y: canvas.height / 2 + 4 * box }
+    };
+
+    return gates[lvl];
+}
+
+function getLevelSpeed(lvl) {
+    return lvl >= 6 ? 220 - (6 * 15) : 220 - (lvl * 15);
+}
 
 // 1. Generate Flat Color Grid Blocks
 snakeColors.forEach(color => {
@@ -73,14 +139,15 @@ for (let i = 1; i <= totalLevels; i++) {
 
 // --- WALL LOGIC ---
 function isWall(x, y) {
+    const gate = getGatePosition(level);
     if (doorOpen) {
-        if (level === 1 && x === 0 && y === canvas.height / 2) return false;
-        if (level === 2 && x === canvas.width / 2 && y === 0) return false;
-        if (level === 3 && x === canvas.width - box && y === canvas.height / 2) return false;
-        if (level === 4 && x === canvas.width / 2 && y === canvas.height - box) return false;
-        if (level === 5 && x === canvas.width / 2 && y === 0) return false; 
-        if (level === 6 && x === canvas.width - box && y === canvas.height/2+4*box) return false;
+        if (gate && x === gate.x && y === gate.y) return false;
     }
+
+    if (level === 7) {
+        return level7WallRects.some(rect => isInsideRect(x, y, rect));
+    }
+
     return (
         x === 0 ||
         y === 0 ||
@@ -89,7 +156,21 @@ function isWall(x, y) {
     );
 }
 
+function isInsideRect(x, y, rect) {
+    return (
+        x < rect.x + rect.width &&
+        x + box > rect.x &&
+        y < rect.y + rect.height &&
+        y + box > rect.y
+    );
+}
+
 function drawWalls() {
+    if (level === 7) {
+        drawLevel7Walls();
+        return;
+    }
+
     ctx.fillStyle = "brown";
     for (let x = 0; x < canvas.width; x += box) {
         for (let y = 0; y < canvas.height; y += box) {
@@ -98,14 +179,39 @@ function drawWalls() {
     }
 
     if (doorOpen) {
+        const gate = getGatePosition(level);
         ctx.fillStyle = gateBlinkColor;
-        if (level === 1) ctx.fillRect(0, canvas.height / 2, box, box);
-        else if (level === 2) ctx.fillRect(canvas.width / 2, 0, box, box);
-        else if (level === 3) ctx.fillRect(canvas.width - box, canvas.height / 2, box, box);
-        else if (level === 4) ctx.fillRect(canvas.width / 2, canvas.height - box, box, box);
-        else if (level === 5) ctx.fillRect(canvas.width / 2, 0, box, box);
-        else if (level === 6) ctx.fillRect(canvas.width - box, canvas.height/2 + 4 * box, box, box);
+        if (gate) ctx.fillRect(gate.x, gate.y, box, box);
     }
+}
+
+function drawLevel7Walls() {
+    ctx.fillStyle = "#a52a2a";
+    level7WallRects
+        .filter(rect => !rect.type)
+        .forEach(rect => ctx.fillRect(rect.x, rect.y, rect.width, rect.height));
+
+    ctx.fillStyle = "#ff1a1a";
+    level7CornerWalls.forEach(rect => ctx.fillRect(rect.x, rect.y, rect.width, rect.height));
+    drawLevel7CornerDetails();
+
+    if (doorOpen) {
+        const gate = getGatePosition(level);
+        ctx.fillStyle = gateBlinkColor;
+        if (gate) ctx.fillRect(gate.x, gate.y, box, box);
+    }
+}
+
+function drawLevel7CornerDetails() {
+    ctx.fillStyle = "#000";
+    level7CornerDetailRects.forEach(rect => {
+        ctx.fillRect(
+            rect.x,
+            rect.y,
+            Math.max(1, rect.width),
+            Math.max(1, rect.height)
+        );
+    });
 }
 
 // --- FOOD SPAWN ---
@@ -128,7 +234,8 @@ function startGame(lvl) {
     overlay.style.display = "none";
     gameUI.style.display = "flex";
     level = lvl;
-    speed = 220 - (lvl * 15);
+    canvas.style.border = lvl === 7 ? "none" : "2px solid brown";
+    speed = getLevelSpeed(lvl);
     snake = [{ x: 5 * box, y: 5 * box }];
     direction = "RIGHT";
     nextDirection = "RIGHT";
@@ -169,10 +276,14 @@ document.getElementById("btnRight").addEventListener("click", () => {
 function draw() {
     direction = nextDirection;
 
-    ctx.fillStyle = "lightblue";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#000";
-    ctx.fillRect(box, box, canvas.width - 2 * box, canvas.height - 2 * box);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (level !== 7) {
+        ctx.fillStyle = "lightblue";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#000";
+        ctx.fillRect(box, box, canvas.width - 2 * box, canvas.height - 2 * box);
+    }
 
     drawWalls();
 
@@ -222,14 +333,8 @@ function draw() {
 
     // --- LEVEL CLEARED ---
     if (doorOpen) {
-        if (
-            (level === 1 && snakeX === 0 && snakeY === canvas.height / 2) ||
-            (level === 2 && snakeX === canvas.width / 2 && snakeY === 0) ||
-            (level === 3 && snakeX === canvas.width - box && snakeY === canvas.height / 2) ||
-            (level === 4 && snakeX === canvas.width / 2 && snakeY === canvas.height - box) ||
-            (level === 5 && snakeX === canvas.width / 2 && snakeY === 0) ||
-            (level === 6 && snakeX === canvas.width - box && snakeY === canvas.height/ 2 + 4 * box)
-        ) {
+        const gate = getGatePosition(level);
+        if (gate && snakeX === gate.x && snakeY === gate.y) {
             clearInterval(game);
             clearInterval(blinkInterval);
             const gameOverScreen = document.getElementById("gameOverScreen");
