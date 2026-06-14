@@ -10,26 +10,34 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to right, #000, #000);
+  background: #000;
   color: #fff;
   overflow: hidden;
   flex-direction: column;
+  padding: 10px;
 }
 
-/* Game over / level cleared overlay */
-#gameOverScreen {
-  display: none;
+/* Base Fullscreen Overlays */
+#gameOverScreen, #colorSelectionOverlay, #levelOverlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#gameOverScreen {
   background: black;
   color: red;
-  font-size: 60px;
-  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(30px, 8vw, 60px);
   text-align: center;
-  line-height: 100vh;
   z-index: 9999;
   animation: flicker 1s infinite;
 }
@@ -39,8 +47,6 @@ body {
   50% { opacity: 0.6; }
 }
 
-/* Intro images */
-/* Intro images */
 #introImage {
   position: fixed;
   top: 0;
@@ -51,35 +57,77 @@ body {
   background-color: #000; 
   z-index: 1000;
 }
-/* Level overlay */
-#levelOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  z-index: 10;
+
+/* Color Selection Screen */
+#colorSelectionOverlay {
+  background: #222;
+  z-index: 15;
 }
-#levelOverlay h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
+
+#colorSelectionOverlay h1, #levelOverlay h1 {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  margin-bottom: 25px;
   color: gold;
+  text-align: center;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(10px, 3vw, 20px);
+  padding: 20px;
+  background: #333;
+  border-radius: 10px;
+  max-width: 90vw;
+}
+
+.color-box {
+  width: clamp(70px, 20vw, 100px);
+  height: clamp(60px, 15vw, 80px);
+  border: 3px solid white;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.color-box:hover {
+  transform: scale(1.05);
+  border-color: gold;
+}
+
+/* Level Overlay */
+#levelOverlay {
+  background: rgba(0, 0, 0, 0.95);
+}
+
+#backToColors {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: #444;
+  color: white;
+  border: 1px solid gold;
+  padding: 8px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
 }
 
 .level-grid {
   display: grid;
-  grid-template-columns: repeat(5, 80px);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  max-width: 90vw;
+}
+
+@media (min-width: 480px) {
+  .level-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
 }
 
 .level {
-  width: 80px;
-  height: 80px;
+  width: clamp(65px, 18vw, 80px);
+  height: clamp(65px, 18vw, 80px);
   background: orange;
   border-radius: 15px;
   display: flex;
@@ -88,66 +136,75 @@ body {
   font-size: 22px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
   position: relative;
 }
-.level:hover { transform: scale(1.1); }
-.level.locked { background: gray; cursor: not-allowed; }
 
 .stars {
   position: absolute;
-  top: -20px;
-  font-size: 14px;
+  top: -15px;
+  font-size: 12px;
   color: gold;
 }
 
-/* Game UI */
+/* Game Playing Interface */
 #gameUI {
   display: none;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
+
 #topbar {
-  margin-bottom: 10px;
-  font-size: 20px;
+  margin-bottom: 5px;
+  font-size: clamp(16px, 4vw, 22px);
   display: flex;
-  gap: 20px;
+  gap: 30px;
 }
 
-/* Canvas styling */
+/* Dynamic Responsive Canvas */
 canvas {
-  border: 2px solid #000;
+  border: 2px solid brown;
   background: radial-gradient(circle at center, #111 20%, #330000 100%);
+  max-width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
 }
 
-/* Controls */
+/* Input Controller Rows */
 #controls {
-  margin-top: 15px;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  width: 100%;
 }
+
 .control-row {
   display: flex;
-  gap: 10px;
+  gap: 15px;
 }
+
 .btn {
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
+  width: clamp(50px, 14vw, 65px);
+  height: clamp(50px, 14vw, 65px);
+  border-radius: 50%; /* Rounded controls are easier to tap on mobile */
   background: orange;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 22px;
   color: #000;
   cursor: pointer;
   user-select: none;
-  transition: 0.3s;
+  touch-action: manipulation;
 }
-.btn:active {
-  background: gold;
-  transform: scale(0.95);
+
+/* Desktop optimization to hide layout controllers if wanted, or leave visible for mouse */
+@media (min-width: 768px) {
+  #controls {
+    margin-top: 15px;
+  }
 }

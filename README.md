@@ -1,5 +1,5 @@
 # 🐍 Snake Game
-![Release](https://img.shields.io/badge/Release-v1.2.6-deeppink?style=for-the-badge&logo=github)
+![Release](https://img.shields.io/badge/Release-v1.3.0-deeppink?style=for-the-badge&logo=github)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)
 
 A simple Snake Game built with **HTML, CSS, and JavaScript**.
