@@ -4,6 +4,9 @@ const scoreEl = document.getElementById("score");
 const levelEl = document.getElementById("level");
 const levelGrid = document.getElementById("levelGrid");
 const overlay = document.getElementById("levelOverlay");
+const colorOverlay = document.getElementById("colorSelectionOverlay");
+const colorGrid = document.getElementById("colorGrid");
+const backBtn = document.getElementById("backToColors");
 const gameUI = document.getElementById("gameUI");
 const box = 20;
 
@@ -15,6 +18,40 @@ let unlocked = 6;
 // ⚡ Gate blinking variables
 let gateBlinkColor = "black";
 let blinkInterval = null;
+
+// --- COLOR SELECTION SYSTEM (From GitHub Issue Style) ---
+const snakeColors = [
+    { name: "Green", head: "#00FF00", body: "#00aa00" },
+    { name: "Blue", head: "#007BFF", body: "#0056b3" },
+    { name: "Purple", head: "#A020F0", body: "#6a0dad" },
+    { name: "Orange", head: "#FF4500", body: "#cc3700" },
+    { name: "Red", head: "#DC3545", body: "#a71d2a" },
+    { name: "Yellow", head: "#FFFF00", body: "#cccc00" }
+];
+
+let selectedColor = snakeColors[0]; // Default color configuration
+
+// 1. Generate Flat Color Grid Blocks
+snakeColors.forEach(color => {
+    const block = document.createElement("div");
+    block.classList.add("color-box");
+    block.style.backgroundColor = color.head;
+    
+    block.addEventListener("click", () => {
+        selectedColor = color;
+        colorOverlay.style.display = "none";
+        overlay.style.display = "flex"; // Navigate to Level Select screen
+    });
+    colorGrid.appendChild(block);
+});
+
+// 2. Back Navigation Logic
+if (backBtn) {
+    backBtn.addEventListener("click", () => {
+        overlay.style.display = "none";
+        colorOverlay.style.display = "flex"; // Return to choice matrix
+    });
+}
 
 // --- Create Level Buttons ---
 for (let i = 1; i <= totalLevels; i++) {
@@ -36,13 +73,12 @@ for (let i = 1; i <= totalLevels; i++) {
 
 // --- WALL LOGIC ---
 function isWall(x, y) {
-    // Gate position exceptions when door is open
     if (doorOpen) {
         if (level === 1 && x === 0 && y === canvas.height / 2) return false;
         if (level === 2 && x === canvas.width / 2 && y === 0) return false;
         if (level === 3 && x === canvas.width - box && y === canvas.height / 2) return false;
         if (level === 4 && x === canvas.width / 2 && y === canvas.height - box) return false;
-        if (level === 5 && x === canvas.width / 2 && y === 0) return false; // top center gate
+        if (level === 5 && x === canvas.width / 2 && y === 0) return false; 
         if (level === 6 && x === canvas.width - box && y === canvas.height/2+4*box) return false;
     }
     return (
@@ -61,7 +97,6 @@ function drawWalls() {
         }
     }
 
-    // ⚡ Draw blinking gate
     if (doorOpen) {
         ctx.fillStyle = gateBlinkColor;
         if (level === 1) ctx.fillRect(0, canvas.height / 2, box, box);
@@ -103,7 +138,6 @@ function startGame(lvl) {
     levelEl.textContent = "Level: " + level;
     food = spawnFood();
 
-    // ⚡ Stop blinking when game starts
     clearInterval(blinkInterval);
     gateBlinkColor = "black";
 
@@ -135,25 +169,23 @@ document.getElementById("btnRight").addEventListener("click", () => {
 function draw() {
     direction = nextDirection;
 
-    // Backgrounds
     ctx.fillStyle = "lightblue";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#000";
     ctx.fillRect(box, box, canvas.width - 2 * box, canvas.height - 2 * box);
 
-    // Walls
     drawWalls();
 
-    // Snake
+    // Render snake using selected parameters dynamically
     for (let i = 0; i < snake.length; i++) {
         if (i === 0) {
-            ctx.fillStyle = "#0f0";
+            ctx.fillStyle = selectedColor.head; 
             ctx.fillRect(snake[i].x, snake[i].y, box, box);
             ctx.fillStyle = "#000";
             ctx.fillRect(snake[i].x + 4, snake[i].y + 4, 4, 4);
             ctx.fillRect(snake[i].x + 12, snake[i].y + 4, 4, 4);
         } else {
-            ctx.fillStyle = "#0a0";
+            ctx.fillStyle = selectedColor.body; 
             ctx.fillRect(snake[i].x, snake[i].y, box, box);
         }
     }
@@ -164,7 +196,6 @@ function draw() {
     ctx.textBaseline = "middle";
     ctx.fillText("🍎", food.x + box / 2, food.y + box / 2);
 
-    // ⚡ Open gate after score ≥ 5 (and start blinking)
     if (score >= 5 && !doorOpen) {
         doorOpen = true;
         blinkInterval = setInterval(() => {
@@ -172,7 +203,6 @@ function draw() {
         }, 400);
     }
 
-    // Move snake
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
     if (direction === "LEFT") snakeX -= box;
@@ -180,7 +210,6 @@ function draw() {
     if (direction === "RIGHT") snakeX += box;
     if (direction === "DOWN") snakeY += box;
 
-    // Eat food
     if (snakeX === food.x && snakeY === food.y) {
         score++;
         scoreEl.textContent = "Score: " + score;
@@ -202,7 +231,7 @@ function draw() {
             (level === 6 && snakeX === canvas.width - box && snakeY === canvas.height/ 2 + 4 * box)
         ) {
             clearInterval(game);
-            clearInterval(blinkInterval); // ⚡ stop blinking
+            clearInterval(blinkInterval);
             const gameOverScreen = document.getElementById("gameOverScreen");
             gameOverScreen.style.display = "flex";
             gameOverScreen.textContent = "🎉 Level " + level + " Cleared!";
@@ -221,7 +250,7 @@ function draw() {
         snake.some(s => s.x === newHead.x && s.y === newHead.y)
     ) {
         clearInterval(game);
-        clearInterval(blinkInterval); // ⚡ stop blinking
+        clearInterval(blinkInterval);
         const gameOverScreen = document.getElementById("gameOverScreen");
         gameOverScreen.style.display = "flex";
         gameOverScreen.textContent = "GAME OVER\nScore: " + score;
@@ -236,14 +265,14 @@ function draw() {
     snake.unshift(newHead);
 }
 
-// --- INTRO SEQUENCE ---
+// --- INTRO SEQUENCE INTERACTION ---
 const introImage = document.getElementById("introImage");
 if (introImage) {
     introImage.style.display = "block";
     setTimeout(() => {
         introImage.style.display = "none";
-        overlay.style.display = "flex";
+        colorOverlay.style.display = "flex"; 
     }, 2000);
 } else {
-    overlay.style.display = "flex";
+    colorOverlay.style.display = "flex";
 }
